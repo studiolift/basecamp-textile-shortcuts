@@ -18,13 +18,21 @@
   221:"]",222:"'"},C={"~":"`","!":"1","@":"2","#":"3",$:"4","%":"5","^":"6","&":"7","*":"8","(":"9",")":"0",_:"-","+":"=",":":";",'"':"'","<":",",">":".","?":"/","|":"\\"},B={option:"alt",command:"meta","return":"enter",escape:"esc"},o,k={},j={},l={},A,u=!1,n=!1,f=1;20>f;++f)h[111+f]="f"+f;for(f=0;9>=f;++f)h[f+96]=f;p(document,"keypress",t);p(document,"keydown",t);p(document,"keyup",t);var D={bind:function(a,c,b){for(var d=a instanceof Array?a:[a],f=0;f<d.length;++f)z(d[f],c,b);j[a+":"+b]=c;return this},
   unbind:function(a,c){j[a+":"+c]&&(delete j[a+":"+c],this.bind(a,function(){},c));return this},trigger:function(a,c){j[a+":"+c]();return this},reset:function(){k={};j={};return this}};window.Mousetrap=D;"function"==typeof define&&define.amd&&define("mousetrap",function(){return D})})();
 
+  // Add the mousetrap class to the item being focused
+  document.body.addEventListener('focusin', function(e){
+    if (!e.target.className.match(/mousetrap/)) {
+      e.target.className += ' mousetrap';
+    }
+  });
 
-  document.querySelectorAll('.body')[0].className += ' mousetrap';
-
+  // Selection is an object created from the getTextSelection function
+  // Wrapper is the character you want to wrap the selected text in e.g. '*'
   var wrapSelectionIn = function(selection, wrapper) {
     return selection.text.substring(0, selection.start) + wrapper + selection.selected + wrapper + selection.text.substring(selection.end, selection.len);
   }
 
+  // From the element being focused get the relevant
+  // information about the selection
   var getTextSelection = function(element) {
     var values = {
       start: element.selectionStart,
@@ -37,25 +45,28 @@
     return values;
   }
 
-  var detectBoldText = function (event) {
+  // The main function which takes the event
+  // and decides what actions to take
+  var transformText = function (event, command) {
+    var wrapping_character = '*';
+
+    if (command === 'italic') {
+      wrapping_character = '_';
+    }
+
     if (event.target.className.match(/mousetrap/)) {
       var sel = getTextSelection(event.target);
 
-      event.target.value = wrapSelectionIn(sel, '*');
+      // Update the string
+      event.target.value = wrapSelectionIn(sel, wrapping_character);
+
+      // Set the cursor position after updating the string
+      // to the end of the previously selected text
       event.target.setSelectionRange(sel.end + 2, sel.end + 2);
     }
   }
 
-  var detectBoldItalic = function (event) {
-    if (event.target.className.match(/mousetrap/)) {
-      var sel = getTextSelection(event.target);
-
-      event.target.value = wrapSelectionIn(sel, '_');
-      event.target.setSelectionRange(sel.end + 2, sel.end + 2);
-    }
-  }
-
-  Mousetrap.bind(['command+b', 'ctrl+b'], function(e) { detectBoldText(e); });
-  Mousetrap.bind(['command+i', 'ctrl+i'], function(e) { detectBoldItalic(e); });
+  Mousetrap.bind(['command+b', 'ctrl+b'], function(e) { transformText(e, 'bold'); });
+  Mousetrap.bind(['command+i', 'ctrl+i'], function(e) { transformText(e, 'italic'); });
 
 })();

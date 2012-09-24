@@ -1,7 +1,7 @@
 # Textile keyboard shortcuts for Basecamp Classic
 
-cmd + b for **
-cmd + i for __
+cmd + b for *selected_text*
+cmd + i for _selected_text_
 
 ## Installation
 
