@@ -2,6 +2,7 @@
 
 cmd + b for `*selected_text*`
 cmd + i for `_selected_text_`
+cmd + u for `+selected_text+`
 
 ## Installation
 

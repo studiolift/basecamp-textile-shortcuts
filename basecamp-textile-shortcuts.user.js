@@ -52,6 +52,8 @@
 
     if (command === 'italic') {
       wrapping_character = '_';
+    } else if (command === 'underline') {
+      wrapping_character = '+';
     }
 
     if (event.target.className.match(/mousetrap/)) {
@@ -68,5 +70,6 @@
 
   Mousetrap.bind(['command+b', 'ctrl+b'], function(e) { transformText(e, 'bold'); });
   Mousetrap.bind(['command+i', 'ctrl+i'], function(e) { transformText(e, 'italic'); });
+  Mousetrap.bind(['command+u', 'ctrl+u'], function(e) { transformText(e, 'underline'); });
 
 })();
